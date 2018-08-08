@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css"/>
+    <script src="/javascripts/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+ 		<script src="/javascripts/xheditor/xheditor-1.2.2.min.js" type="text/javascript" charset="utf-8"></script>
+  	<script src="/javascripts/xheditor/xheditor_lang/zh-cn.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+   <h1>留言</h1>
+   
+  <div class="form-group">
+    <label for="exampleInputEmail1">标题</label>
+    <input type="text" class="form-control" id="tit" placeholder="标题">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">内容</label>
+    <textarea class="form-control xheditor" id="con" placeholder="con"></textarea>
+  </div>
+  
+   <button class="btn btn-success liuyan">发布留言</button> 
+	<hr />
+	<table class="table">
+		<tr>
+			<th>序号</th>
+			<th>标题</th>
+			<th>内容</th>
+		</tr>
+		
+		<% list.map(function(item,i){ %>
+			<tr>
+				<td><%- i+1 %></td>
+				<td><a href="/detail?id=<%-item._id%>"><%- item.tit %></a></td>
+				<td><%- item.con %></td>
+			</tr>
+		<% }) %>
+	</table>
+	<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="/liuyan?pagenum=<%- pagenum<1?1:parseInt(pagenum-1) %>" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+		    <% if(page>4){ %>
+		    	<li><a href="/liuyan?pagenum=1">1</a></li>
+		    	<li><a href="/liuyan?pagenum=2">2</a></li>
+		    	<li><a href="#">...</a></li>
+		    	<li><a href="/liuyan?pagenum=<%- page-1 %>"><%- page-1 %></a></li>
+		    	<li><a href="/liuyan?pagenum=<%- page %>"><%- page %></a></li>
+		    <% }else{ %>
+		    <% for(let i = 0;i<page;i++){ %>
+		    	<li><a href="/liuyan?pagenum=<%- i+1 %>"><%- i+1 %></a></li>
+		    <% } %>
+		   <% } %>
+    <li>
+      <a href="/liuyan?pagenum=<%- pagenum>page?page:parseInt(pagenum+1) %>" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+	
+  </body>
+  <script type="text/javascript">
+  	$(".liuyan").click(function(){
+  		$.ajax({
+  			type:"post",
+  			url:"/users/liuyan",
+  			data:{tit:$("#tit").val(),con:$("#con").val()},
+  			success:function(data){
+  				if(data == 1){
+  					alert("留言成功");
+  					location.href="/liuyan";
+  					
+  				}else{
+  					alert("留言失败");
+  					location.href="/liuyan";
+  				}
+  			}
+  		});
+  	})
+  </script>
+</html>
